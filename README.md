@@ -6,6 +6,6 @@ This is C based simple Student Record System
 ![npm](https://img.shields.io/npm/l/express.svg)
 
 
-###Features
+### Features
 - Made with @JetBrains
 - Support for every c compiler
