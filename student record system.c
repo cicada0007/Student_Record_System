@@ -15,43 +15,26 @@ struct student{
 
 struct student stu;
 
-///This will set the foreground color for printing in a console window.
 void SetColor(int ForgC){
      WORD wColor;
-     ///We will need this handle to get the current background attribute
      HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
      CONSOLE_SCREEN_BUFFER_INFO csbi;
-
-     ///We use csbi for the wAttributes word.
-     if(GetConsoleScreenBufferInfo(hStdOut, &csbi))
-     {
-        ///Mask out all but the background attribute, and add in the forgournd color
+     if(GetConsoleScreenBufferInfo(hStdOut, &csbi)) {
           wColor = (WORD) ((csbi.wAttributes & 0xF0) + (ForgC & 0x0F));
           SetConsoleTextAttribute(hStdOut, wColor);
      }
 }
 
 void ClearConsoleToColors(int ForgC, int BackC){
-     WORD wColor = (WORD) (((BackC & 0x0B) << 4) + (ForgC & 0x0F));
-     ///Get the handle to the current output buffer...
+     WORD wColor = (WORD) (((BackC & 0x00) << 4) + (ForgC & 0x0F));
      HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-     ///This is used to reset the carat/cursor to the top left.
      COORD coord = {0, 0};
-     ///A return value... indicating how many chars were written
-     ///   not used but we need to capture this since it will be
-     ///   written anyway (passing NULL causes an access violation).
      DWORD count;
-     ///This is a structure containing all of the console info
-     /// it is used here to find the size of the console.
      CONSOLE_SCREEN_BUFFER_INFO csbi;
-     ///Here we will set the current color
      SetConsoleTextAttribute(hStdOut, wColor);
-     if(GetConsoleScreenBufferInfo(hStdOut, &csbi))
-     {
-          ///This fills the buffer with a given character (in this case 32=space).
+     if(GetConsoleScreenBufferInfo(hStdOut, &csbi)) {
           FillConsoleOutputCharacter(hStdOut, (TCHAR) 32, (DWORD) (csbi.dwSize.X * csbi.dwSize.Y), coord, &count);
           FillConsoleOutputAttribute(hStdOut, csbi.wAttributes, (DWORD) (csbi.dwSize.X * csbi.dwSize.Y), coord, &count );
-          ///This will set our cursor position for the next print statement.
           SetConsoleCursorPosition(hStdOut, coord);
      }
 }
@@ -61,9 +44,9 @@ void SetColorAndBackground(int ForgC, int BackC) {
      SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), wColor);
 }
 
-COORD coord = {0,0}; ///set the cordinate to 0, 0 (top-left corner of window);
+COORD coord = {0,0};
 void gotoxy(int x, int y){
-    coord.X = (SHORT) x; coord.Y = (SHORT) y; /// X and Y coordinates
+    coord.X = (SHORT) x; coord.Y = (SHORT) y;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
@@ -151,15 +134,12 @@ void get_password(char* pass){
      while(1){
             temp_passP[i]= (char) getch();
             if(temp_passP[i]==13){break;}
-            else if(temp_passP[i]==8)
-            {
+            else if(temp_passP[i]==8) {
                 if(i!=0) {
                 printf("\b \b");
                 i--;
                 } else {printf("\a");}
-            }
-            else
-            {
+            } else {
                 printf("*");
                 *(pass+i) = temp_passP[i];
                 i++;
@@ -190,9 +170,7 @@ void print_heading(const char st[]){
 }
 
 int conf_record(char id[]){
-   // left for you
-   //it checks whether the entered id for
-   //new record is already in the database.
+
 }
 
 void add_student(){
@@ -203,12 +181,11 @@ void add_student(){
     fp = fopen("record.txt","ab+");
     SetColor(45);
     if(fp == NULL){
-        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+        MessageBox(0,"Error in Opening file\n","Warning",0);
 
     }else{
         fflush(stdin);
         gotoxy(print,10);printf("ID: ");gets(stu.ID);
-        //here you can confirms the ID
         gotoxy(print,12);printf("Name: ");gets(stu.name);
         gotoxy(print,14);printf("Address: ");gets(stu.add);
         gotoxy(print,16);printf("Parent's name: ");gets(stu.parname);
@@ -308,7 +285,7 @@ void delete_student(){
     fclose(temp);
     remove("record.txt");
     rename("temp.txt","record.txt");
-    gotoxy(37,12);printf("The record is sucessfully deleted");
+    gotoxy(37,12);printf("The record is successfully deleted");
     SetColor(28);
 }
 
@@ -357,9 +334,8 @@ void main_window(){
 
 int main(){
     ClearConsoleToColors(17,15);
-    SetConsoleTitle("Student Record System | Developed by Sadew");
+    SetConsoleTitle("Student Record System | Developed by Chamod Shehanka");
     window();
-
     main_window();
     return 0;
 }
